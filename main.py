@@ -22,6 +22,18 @@ class MediaPlayer:
         lower_frame.pack(side='bottom', fill='both', expand=True)
 
 
+    def speed_up(self):
+        current_speed = self.player.get_rate()
+        new_speed = current_speed + 0.5
+        self.player.set_rate(new_speed)
+
+    def slow_down(self):
+        current_speed = self.player.get_rate()
+        new_speed = current_speed - 0.5
+        self.player.set_rate(new_speed)
+
+    # ... other code ...
+
     def create_widgets(self):
         self.play_button = ttk.Button(self.root, text='Play', command=self.play)
         self.play_button.pack()
@@ -29,7 +41,16 @@ class MediaPlayer:
         self.stop_button.pack()
         self.open_button = ttk.Button(self.root, text='Open', command=self.open)
         self.open_button.pack()
+        self.speed_up_button = ttk.Button(self.root, text='Speed Up', command=self.speed_up)
+        self.speed_up_button.pack()
+        self.slow_down_button = ttk.Button(self.root, text='Slow Down', command=self.slow_down)
+        self.slow_down_button.pack()
 
+        def speed_up(self):
+            pass
+
+        def slow_down(self):
+            pass
     def play(self):
         self.player.play()
 

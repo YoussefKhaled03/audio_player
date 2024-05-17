@@ -29,6 +29,10 @@ class MediaPlayer:
         self.time_label = ttk.Label(self.root, text='00:00')
         self.time_label.pack(side=tk.LEFT)
         self.update_time()  
+        self.volume_var = tk.DoubleVar(value=self.player.audio_get_volume())
+        self.volume_scale = tk.Scale(self.root, from_=0, to=100, orient='vertical', variable=self.volume_var, command=self.set_volume)
+        self.volume_scale.pack(side='right')
+
 
 
     def create_widgets(self):
@@ -65,6 +69,12 @@ class MediaPlayer:
      new_speed = current_speed - 0.5
      if new_speed > 0:  # prevent the speed from becoming zero or negative
         self.player.set_rate(new_speed)
+
+    def set_volume(self, _=None):  # the Scale widget passes the new value to the command, but we don't need it because we're using a variable
+     volume = self.volume_var.get()
+     self.player.audio_set_volume(int(volume))
+
+
 
     def play(self):
      self.player.play()

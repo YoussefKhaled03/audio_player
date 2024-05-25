@@ -13,21 +13,33 @@ class MediaPlayer:
         self.root.geometry('800x400')
         self.root.resizable(True, True)
         self.frame = ttk.Frame(self.root)
-        self.create_widgets()
+        #self.create_widgets()
         self.player = vlc.MediaPlayer()
         image_icon = tk.PhotoImage(file = "foxi22.png")
         self.root.iconphoto(False, image_icon)
-        lower_frame = tk.Frame(self.root, bg='#09edff')
-        lower_frame.pack(side='bottom', fill='both', expand=True)
-        self.pause_button = ttk.Button(self.root, text='Pause', command=self.pause)
-        self.pause_button.pack()
+        top_frame = tk.Frame(self.root, bg='#09edff')
+        top_frame.pack(side='top', fill='both', expand=True)
+        #self.pause_button = ttk.Button(self.root, text='Pause', command=self.pause)
+        #self.pause_button.pack()
 
         # Create a Frame for the video in the lower_frame
-        self.video_frame = tk.Frame(lower_frame, bg='black')
+        self.video_frame = tk.Frame(top_frame, bg='black')
         self.video_frame.pack(fill='both', expand=True)
 
         # Wait for the window to be created and mapped (shown on screen)
         self.video_frame.after(1, self.setup_player)
+
+        # Create a Frame for the buttons
+        self.button_frame = tk.Frame(self.root)
+        self.button_frame.pack(side='bottom', fill='x')
+
+        # Pack the buttons into the button_frame
+        play_button_image = tk.PhotoImage(file="123.png").subsample(20, 25)
+        self.play_button = ttk.Button(self.button_frame, image=play_button_image, command=self.open)
+        self.play_button.image = play_button_image
+        self.play_button.pack(side='left')
+        self.pause_button = ttk.Button(self.button_frame, text='Pause', command=self.pause)
+        self.pause_button.pack(side='left')
 
 
     def create_widgets(self):

@@ -32,6 +32,12 @@ class MediaPlayer:
         self.volume_var = tk.DoubleVar(value=self.player.audio_get_volume())
         self.volume_scale = tk.Scale(self.root, from_=100, to=0, orient='vertical', variable=self.volume_var, command=self.set_volume)
         self.volume_scale.pack(side='right')
+        # Create a Frame for the video in the lower_frame
+        self.video_frame = tk.Frame(lower_frame, bg='black')
+        self.video_frame.pack(fill='both', expand=True)
+
+        # Wait for the window to be created and mapped (shown on screen)
+        self.video_frame.after(1, self.setup_player)
 
 
 
@@ -54,7 +60,17 @@ class MediaPlayer:
         self.five_sec_forward_button.pack()
         self.five_sec_backward_button = ttk.Button(self.root, text='5 sec Backward', command=self.five_sec_backward_button)
         self.five_sec_backward_button.pack()'''
-         
+
+    def setup_player(self):
+        # Get the window identifier (wid) of the video_frame
+        wid = self.video_frame.winfo_id()
+
+        # Set the output window for the player
+        if os.name == 'nt':  # for Windows
+            self.player.set_hwnd(wid)
+        else:  # for Linux and MacOS
+            self.player.set_xwindow(wid)
+
     def set_time(self, _=None):
         time = self.time_var.get()
         self.player.set_time(int(time * 1000))  # VLC's set_time method expects time in milliseconds

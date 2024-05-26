@@ -36,7 +36,7 @@ class MediaPlayer:
 
         # Create a volume scale
         self.volume_var = tk.DoubleVar(value=self.player.audio_get_volume())
-        self.volume_scale = tk.Scale(self.root, from_=100, to=0, orient='vertical', variable=self.volume_var, command=self.set_volume)
+        self.volume_scale = tk.Scale(self.root, from_=100, to=0, orient='vertical', variable=self.volume_var, command=self.set_volume, troughcolor='turquoise', sliderlength=20, bg='sky blue')
         self.volume_scale.pack(side='right')
 
         # Create a video progress scale
@@ -66,9 +66,9 @@ class MediaPlayer:
         self.skip_backward_button.image = backward_button_image
         self.skip_backward_button.pack(side='left')
 
-        forkward_button_image = tk.PhotoImage(file="123.png").subsample(10, 15)
-        self.skip_forward_button = ttk.Button(self.other_button_frame, image=forkward_button_image, command=self.skip_forward)
-        self.skip_forward_button.image = forkward_button_image
+        forward_button_image = tk.PhotoImage(file="123.png").subsample(10, 15)
+        self.skip_forward_button = ttk.Button(self.other_button_frame, image=forward_button_image, command=self.skip_forward)
+        self.skip_forward_button.image = forward_button_image
         self.skip_forward_button.pack(side='left')
 
         slow_down_button_image = tk.PhotoImage(file="123.png").subsample(10, 15)

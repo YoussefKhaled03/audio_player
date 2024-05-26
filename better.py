@@ -11,6 +11,7 @@ class MediaPlayer:
         self.root.title('foxi')
         self.root.geometry('800x400')
         self.root.resizable(True, True)
+        self.root.configure(bg='turquoise')
         self.frame = ttk.Frame(self.root)
         self.player = vlc.MediaPlayer()
         image_icon = tk.PhotoImage(file = "foxi22.png")
@@ -26,33 +27,38 @@ class MediaPlayer:
         self.video_frame.after(1, self.setup_player)
 
         # Create a Frame for the buttons
-        self.button_frame = tk.Frame(self.root)
+        self.button_frame = tk.Frame(self.root, bg='turquoise')
         self.button_frame.pack(side='bottom', fill='x')
+        
 
         self.middle_button_frame = tk.Frame(self.button_frame)
         self.middle_button_frame.pack(side='top', expand=True)
+
+        
+
+        # Create a volume scale
+        self.volume_var = tk.DoubleVar(value=self.player.audio_get_volume())
+        self.volume_scale = tk.Scale(self.root, from_=100, to=0, orient='vertical', variable=self.volume_var, command=self.set_volume, troughcolor='turquoise', sliderlength=20, bg='sky blue')
+        self.volume_scale.pack(side='right')
+
+        # Create a video progress scale
+        self.progress_var = tk.DoubleVar()
+        style = ttk.Style()
+        style.theme_use('clam')
+        style.configure("TScale", background="turquoise")
+        self.progress_scale = ttk.Scale(self.button_frame, from_=0, to=100, variable=self.progress_var, command=self.set_progress, style="TScale")
+        self.progress_label = ttk.Label(self.root, text='00:00')
+        self.progress_scale.pack(side='left', fill='x', expand=True)
+        self.update_progress()
+        # Create a Frame for the other buttons
+        self.other_button_frame = tk.Frame(self.root)
+        self.other_button_frame.pack(side='bottom', expand=False)
 
         # Pack the buttons into the button_frame
         play_button_image = tk.PhotoImage(file="123.png").subsample(10, 15)
         self.play_button = ttk.Button(self.middle_button_frame, image=play_button_image, command=self.open)
         self.play_button.image = play_button_image
         self.play_button.pack(side='left')
-
-        # Create a volume scale
-        self.volume_var = tk.DoubleVar(value=self.player.audio_get_volume())
-        self.volume_scale = tk.Scale(self.root, from_=100, to=0, orient='vertical', variable=self.volume_var, command=self.set_volume)
-        self.volume_scale.pack(side='right')
-
-        # Create a video progress scale
-        self.progress_var = tk.DoubleVar()
-        self.progress_scale = ttk.Scale(self.button_frame, from_=0, to=100, variable=self.progress_var, command=self.set_progress, length=1000)
-        self.progress_label = ttk.Label(self.root, text='00:00')
-        self.progress_scale.pack(side='left')
-        self.update_progress()
-        # Create a Frame for the other buttons
-        self.other_button_frame = tk.Frame(self.root)
-        self.other_button_frame.pack(side='bottom', expand=False)
-        
 
         # Pack the other buttons into the other_button_frame
         pause_button_image = tk.PhotoImage(file="123.png").subsample(10, 15)

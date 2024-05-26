@@ -104,32 +104,34 @@ class MediaPlayer:
     def set_progress(self, _=None):
         length = self.player.get_length()  # get the length of the video
         progress = self.progress_var.get()  # get the current progress
-        time = length * progress / 100  # calculate the time
-        self.player.set_time(int(time))  # set the time
+        if 0 <= progress <= 100:  # ensure progress is within range
+            time = length * progress / 100  # calculate the time
+            self.player.set_time(int(time))  # set the time
 
     def update_progress(self):
         if self.player.get_state() == vlc.State.Playing:
             length = self.player.get_length()
-            time = self.player.get_time()
-            progress = time / length * 100
-            self.progress_var.set(progress)
-
+            if length > 0:  # ensure length is not zero
+                time = self.player.get_time()
+                progress = time / length * 100
+                self.progress_var.set(progress)
         # Schedule the next update
         self.root.after(1000, self.update_progress)
 
     def skip_backward(self):
-        time = self.player.get_time() - 10000  # skip backward 10 seconds
+        time = max(self.player.get_time() - 10000, 0)  # ensure time is not negative
         self.player.set_time(time)
 
     def skip_forward(self):
         time = self.player.get_time() + 10000  # skip forward 10 seconds
         self.player.set_time(time)
 
-    def slow_down(self):
-       current_speed = self.player.get_rate()
-       new_speed = current_speed - 0.5
-       if new_speed > 0:  # prevent the speed from becoming zero or negative
-         self.player.set_rate(new_speed)
+    def skip_forward(self):
+        time = self.player.get_time() + 10000
+        length = self.player.get_length()
+        if time > length:  # ensure time does not exceed length
+            time = length
+        self.player.set_time(time)
 
     def speed_up(self):
      current_speed = self.player.get_rate()

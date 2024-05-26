@@ -138,6 +138,12 @@ class MediaPlayer:
      new_speed = current_speed + 0.5
      self.player.set_rate(new_speed)
 
+    def slow_down(self):
+       current_speed = self.player.get_rate()
+       new_speed = current_speed - 0.5
+       if new_speed > 0:  # prevent the speed from becoming zero or negative
+         self.player.set_rate(new_speed)
+
     def pause(self):
         self.player.pause()
 

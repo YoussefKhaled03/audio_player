@@ -1,10 +1,12 @@
+'''simple media player using tkinter'''
+
 import os
 import tkinter as tk
 from tkinter import filedialog
+#from tkinter import messagebox
 from tkinter import ttk
 import vlc
 import time
-from PIL import Image, ImageTk
 
 class MediaPlayer:
     def __init__(self):
@@ -14,6 +16,7 @@ class MediaPlayer:
         self.root.resizable(True, True)
         self.root.configure(bg='turquoise')
         self.frame = ttk.Frame(self.root)
+        #self.create_widgets()
         self.player = vlc.MediaPlayer()
         image_icon = tk.PhotoImage(file = "foxi22.png")
         self.root.iconphoto(False, image_icon)
@@ -30,30 +33,21 @@ class MediaPlayer:
         # Create a Frame for the buttons
         self.button_frame = tk.Frame(self.root, bg='turquoise')
         self.button_frame.pack(side='bottom', fill='x')
+
+         # Create a Frame for the other buttons
+        self.other_button_frame = tk.Frame(self.root)
+        self.other_button_frame.pack(side='bottom', expand=False)
         
 
         self.middle_button_frame = tk.Frame(self.button_frame)
         self.middle_button_frame.pack(side='top', expand=True)
-
-        
 
         # Create a volume scale
         self.volume_var = tk.DoubleVar(value=self.player.audio_get_volume())
         self.volume_scale = tk.Scale(self.root, from_=100, to=0, orient='vertical', variable=self.volume_var, command=self.set_volume, troughcolor='turquoise', sliderlength=20, bg='sky blue')
         self.volume_scale.pack(side='right')
 
-        # Create a video progress scale
-        self.progress_var = tk.DoubleVar()
-        style = ttk.Style()
-        style.theme_use('clam')
-        style.configure("TScale", background="turquoise")
-        self.progress_scale = ttk.Scale(self.button_frame, from_=0, to=1500, variable=self.progress_var, length=1500 , command=self.set_progress, style="TScale")
-        self.progress_label = ttk.Label(self.root, text='00:00')
-        self.progress_scale.pack(side='left')
-        self.update_progress()
-        # Create a Frame for the other buttons
-        self.other_button_frame = tk.Frame(self.root)
-        self.other_button_frame.pack(side='bottom', expand=False)
+
 
         # Pack the buttons into the button_frame
         play_button_image = tk.PhotoImage(file="123.png").subsample(10, 15)
@@ -87,6 +81,24 @@ class MediaPlayer:
         self.speed_up_button.image = speed_up_button_image
         self.speed_up_button.pack(side='left')
 
+
+        # Create a video progress scale
+        self.time_var = tk.DoubleVar()
+        style = ttk.Style()
+        style.theme_use('clam')
+        style.configure("TScale", background="turquoise")
+        self.time_scale = ttk.Scale(self.button_frame, from_=0, to=1500, variable=self.time_var, length=1500 , command=self.set_time, style="TScale")
+        self.time_label = ttk.Label(self.root, text='00:00')
+        self.time_scale.pack(side='left')
+        self.update_time()
+
+        
+
+        # Wait for the window to be created and mapped (shown on screen)
+        self.video_frame.after(1, self.setup_player)
+
+
+
     def setup_player(self):
         # Get the window identifier (wid) of the video_frame
         wid = self.video_frame.winfo_id()
@@ -97,55 +109,49 @@ class MediaPlayer:
         else:  # for Linux and MacOS
             self.player.set_xwindow(wid)
 
-    def set_volume(self, _=None):
-        volume = self.volume_var.get()  # get the current volume
-        self.player.audio_set_volume(int(volume))  # set the volume
+    def set_time(self, _=None):
+        time = self.time_var.get()
+        self.player.set_time(int(time * 1000))  # VLC's set_time method expects time in milliseconds
 
-    def set_progress(self, _=None):
-        length = self.player.get_length()  # get the length of the video
-        progress = self.progress_var.get()  # get the current progress
-        if 0 <= progress <= 100:  # ensure progress is within range
-            time = length * progress / 100  # calculate the time
-            self.player.set_time(int(time))  # set the time
-
-    def update_progress(self):
+    def update_time(self):
         if self.player.get_state() == vlc.State.Playing:
-            length = self.player.get_length()
-            if length > 0:  # ensure length is not zero
-                time = self.player.get_time()
-                progress = time / length * 100
-                self.progress_var.set(progress)
-        # Schedule the next update
-        self.root.after(1000, self.update_progress)
-
-    def skip_backward(self):
-        time = max(self.player.get_time() - 10000, 0)  # ensure time is not negative
-        self.player.set_time(time)
-
-    def skip_forward(self):
-        time = self.player.get_time() + 10000  # skip forward 10 seconds
-        self.player.set_time(time)
-
-    def skip_forward(self):
-        time = self.player.get_time() + 10000
-        length = self.player.get_length()
-        if time > length:  # ensure time does not exceed length
-            time = length
-        self.player.set_time(time)
-
+            time = self.player.get_time() / 1000  # get_time returns time in milliseconds
+            self.time_var.set(time)
+            minutes, seconds = divmod(time, 60)
+            self.time_label.config(text=f'{int(minutes):02}:{int(seconds):02}')
+        self.root.after(1000, self.update_time)
+  
     def speed_up(self):
-     current_speed = self.player.get_rate()
-     new_speed = current_speed + 0.5
-     self.player.set_rate(new_speed)
+        current_speed = self.player.get_rate()
+        new_speed = current_speed + 0.5
+        self.player.set_rate(new_speed)
 
     def slow_down(self):
-       current_speed = self.player.get_rate()
-       new_speed = current_speed - 0.5
-       if new_speed > 0:  # prevent the speed from becoming zero or negative
-         self.player.set_rate(new_speed)
+        current_speed = self.player.get_rate()
+        new_speed = current_speed - 0.5
+        if new_speed > 0:  # prevent the speed from becoming zero or negative
+           self.player.set_rate(new_speed)
 
-    def pause(self):
-        self.player.pause()
+    def set_volume(self, _=None):  # the Scale widget passes the new value to the command, but we don't need it because we're using a variable
+        volume = self.volume_var.get()
+        self.player.audio_set_volume(int(volume))
+
+    def skip_forward(self):
+     time = self.player.get_time() + 5000  # add 5 seconds
+     self.player.set_time(time)
+     
+    def skip_backward(self):
+        time = self.player.get_time() - 5000
+        self.player.set_time(time)
+
+
+    def play(self):
+        self.player.play()
+        self.update_time()  # start updating the time
+
+    def stop(self):
+        self.player.stop()
+
 
     def open(self):
         filepath = filedialog.askopenfilename()
@@ -155,8 +161,11 @@ class MediaPlayer:
            time.sleep(0.1)  # add a short delay
            #self.player.pause()  # pause the video
            length = self.player.get_length() / 1000  # get_length returns length in milliseconds
-           self.progress_scale.config(to=length)  # set the Scale widget's range to the length of the video
+           self.time_scale.config(to=length)  # set the Scale widget's range to the length of the video
 
+    def pause(self):
+        self.player.pause()
 
+ # Create an instance of the media player and start the Tkinter event loop
 media_player = MediaPlayer()
 media_player.root.mainloop()

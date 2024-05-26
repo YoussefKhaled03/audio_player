@@ -4,6 +4,7 @@ from tkinter import filedialog
 from tkinter import ttk
 import vlc
 import time
+from PIL import Image, ImageTk
 
 class MediaPlayer:
     def __init__(self):
@@ -61,27 +62,27 @@ class MediaPlayer:
         self.play_button.pack(side='left')
 
         # Pack the other buttons into the other_button_frame
-        pause_button_image = tk.PhotoImage(file="123.png").subsample(10, 15)
+        pause_button_image = tk.PhotoImage(file="better_pause.png").subsample(2, 3)
         self.pause_button = ttk.Button(self.middle_button_frame, image=pause_button_image, command=self.pause)
         self.pause_button.image = pause_button_image
         self.pause_button.pack(side='left')
 
-        backward_button_image = tk.PhotoImage(file="123.png").subsample(10, 15)
+        backward_button_image = tk.PhotoImage(file="bkwrd.png").subsample(2, 3)
         self.skip_backward_button = ttk.Button(self.other_button_frame, image=backward_button_image, command=self.skip_backward)
         self.skip_backward_button.image = backward_button_image
         self.skip_backward_button.pack(side='left')
 
-        forward_button_image = tk.PhotoImage(file="123.png").subsample(10, 15)
+        forward_button_image = tk.PhotoImage(file="frwrd.png").subsample(2, 3)
         self.skip_forward_button = ttk.Button(self.other_button_frame, image=forward_button_image, command=self.skip_forward)
         self.skip_forward_button.image = forward_button_image
         self.skip_forward_button.pack(side='left')
 
-        slow_down_button_image = tk.PhotoImage(file="123.png").subsample(10, 15)
+        slow_down_button_image = tk.PhotoImage(file="slow.png").subsample(10, 15)
         self.slow_down_button = ttk.Button(self.other_button_frame, image=slow_down_button_image, command=self.slow_down)
         self.slow_down_button.image = slow_down_button_image
         self.slow_down_button.pack(side='left')
 
-        speed_up_button_image = tk.PhotoImage(file="123.png").subsample(10, 15)
+        speed_up_button_image = tk.PhotoImage(file="spd.png").subsample(10, 15)
         self.speed_up_button = ttk.Button(self.other_button_frame, image=speed_up_button_image, command=self.speed_up)
         self.speed_up_button.image = speed_up_button_image
         self.speed_up_button.pack(side='left')

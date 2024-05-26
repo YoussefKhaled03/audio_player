@@ -47,9 +47,9 @@ class MediaPlayer:
         style = ttk.Style()
         style.theme_use('clam')
         style.configure("TScale", background="turquoise")
-        self.progress_scale = ttk.Scale(self.button_frame, from_=0, to=100, variable=self.progress_var, command=self.set_progress, style="TScale")
+        self.progress_scale = ttk.Scale(self.button_frame, from_=0, to=1500, variable=self.progress_var, length=1500 , command=self.set_progress, style="TScale")
         self.progress_label = ttk.Label(self.root, text='00:00')
-        self.progress_scale.pack(side='left', fill='x', expand=True)
+        self.progress_scale.pack(side='left')
         self.update_progress()
         # Create a Frame for the other buttons
         self.other_button_frame = tk.Frame(self.root)
@@ -154,7 +154,7 @@ class MediaPlayer:
            self.player.play()  # start playing the video to get its length
            time.sleep(0.1)  # add a short delay
            self.player.pause()  # pause the video
-           length = self.player.get_length() / 1000  # get_length returns length in milliseconds
+           length = self.player.get_length() / 1250  # get_length returns length in milliseconds
            self.progress_scale.config(to=length)  # set the Scale widget's range to the length of the video
 
 

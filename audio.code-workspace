@@ -1,0 +1,37 @@
+{
+	"folders": [
+		{
+			"name": "momo",
+			"path": "../momo"
+		},
+		{
+			"name": "new",
+			"path": "C:/Users/PC WORLD/Documents/SQL Server Management Studio/new"
+		},
+		{
+			"name": "try",
+			"path": "C:/Users/PC WORLD/Documents/SQL Server Management Studio/try"
+		}
+	],
+	"settings": {
+		"sqltools.connections": [
+			{
+				"mysqlOptions": {
+					"authProtocol": "default",
+					"enableSsl": "Disabled"
+				},
+				"previewLimit": 50,
+				"server": "localhost",
+				"port": 3306,
+				"driver": "MariaDB",
+				"name": "FirstMySQL Connection",
+				"database": "bankk",
+				"username": "root",
+				"password": "123456"
+			}
+		],
+		"dataworkspace.excludedProjects": [
+			"try/try.sqlproj"
+		]
+	}
+}
